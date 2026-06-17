@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package event.v1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "events/api/proto;eventsv1";
+
+message Event {
+  string id = 1;
+  string user_id = 2;
+  string event_type = 3;
+  google.protobuf.Struct payload = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message CreateEventRequest {
+  string user_id = 1;
+  string event_type = 2;
+  google.protobuf.Struct payload = 3;
+}
+message CreateEventResponse {
+  Event event = 1;
+}
+
+message ListEventsRequest {
+  string user_id = 1;
+  string event_type = 2;
+  uint32 limit = 3;
+  string page_token = 4;
+}
+message ListEventsResponse {
+  repeated Event events = 1;
+  string next_page_token = 2;
+}
+
+message GetStatsRequest {}
+message GetStatsResponse {
+  uint64 total_events = 1;
+  map<string, uint64> by_type = 2;
+  uint64 unique_users = 3;
+}
+
+service EventService {
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  rpc GetStats(GetStatsRequest) returns (GetStatsResponse);
+}

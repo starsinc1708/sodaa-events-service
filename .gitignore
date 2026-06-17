@@ -1,0 +1,11 @@
+.env
+
+.idea/
+.vscode/
+
+/bin/
+*.exe
+
+*.test
+*.out
+coverage.*
